@@ -46,11 +46,9 @@ body {
     line-height: 13px;
 }
 
-#rooms {
-/*    float: right;*/
-    background-color: red;
-    height: 200px;
-    width: 200px;
+select {
+    width: 20%;
+    background-color: teal;
 }
 
 form {
