@@ -46,6 +46,13 @@ body {
     line-height: 13px;
 }
 
+#rooms {
+/*    float: right;*/
+    background-color: red;
+    height: 200px;
+    width: 200px;
+}
+
 form {
     padding: 20px;
     padding-left: 0;
@@ -53,10 +60,12 @@ form {
 }
 
 form input[type=text] {
+    font-family: helvetica;
     margin-right: 10px;
-    width: 70%;
-    font-size: 12px;
+    width: 100%;
+    font-size: 20px;
     padding: 5px;
+    border-radius: 50px;
 }
 
 .chat {
@@ -82,3 +91,6 @@ form input[type=text] {
 .spinner img {
     padding: 10px;
 }
+
+
+
