@@ -5,8 +5,8 @@ $(function () {
 
   app.init = function() {
     app.fetch();
-    setInterval(function() { 
-      app.fetch(); 
+    setInterval(function() {
+      app.fetch();
     }, 3000);
   };
 
@@ -66,26 +66,37 @@ $(function () {
 
   app.clearMessages = function() {
     $('#chats').empty();
-  };  
+  };
 
   app.addMessage = function(message) {
     console.log(message);
-    $('#chats').append('<p>' + message.username + ': ' + message.text + ' ' +
-      message.createdAt +'</p>').addClass('.message');
+    var usernameNode = $('<span class=username></span>');
+    var textNode = $('<span class=text></span>');
+    var dateNode = $('<span class=date></span>');
+    var messageNode = $('<div class=message></div>');
+
+    usernameNode.text(message.username + ': ');
+    textNode.text(message.text + '');
+    dateNode.text(message.createdAt + ' ');
+    $('#chats').prepend(messageNode);
+    messageNode.append(usernameNode,textNode,dateNode);
   };
 
   app.addRoom = function(roomName){
-    var newOption = ('<option>').text(roomName);
-    $('select').append(newOption);
+    var optionNode = $('<option>').addClass(roomName)
+                                  .text(roomName)
+                                  .attr('selected', 'selected');
+    $('select').append(optionNode);
   };
 
   $('#button').on('click', function(){
-    var roomName = alert($(this).val());
+    var roomName = prompt($(this).val());
+    roomName.split(' ').join('');
     app.addRoom(roomName);
   });
 
   var username = (document.URL).split('=')[1];
-  console.log(username);
+
   $('#userSubmit').on('click', function() {
     var userInput = $('#userInput').val();
     var userObject = {
