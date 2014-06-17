@@ -66,6 +66,22 @@ form input[type=text] {
     border-radius: 50px;
 }
 
+.username {
+    color: teal;
+}
+
+.text {
+
+}
+
+.date {
+    float:right;
+}
+
+
+/* Given but not needed */
+
+/*
 .chat {
     padding: 5px;
     margin-bottom: 5px;
@@ -88,7 +104,7 @@ form input[type=text] {
 
 .spinner img {
     padding: 10px;
-}
+}*/
 
 
 

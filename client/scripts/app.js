@@ -1,14 +1,17 @@
 $(function () {
-// YOUR CODE HERE:
+
   var app = {};
+  app.server = 'https://api.parse.com/1/classes/chatterbox';
 
   app.init = function() {
-    return true;
+    app.fetch();
+    setInterval(function() { 
+      app.fetch(); 
+    }, 3000);
   };
 
   app.send = function(message) {
     $.ajax({
-      // always use this url
       url: app.server,
       type: 'POST',
       data: JSON.stringify(message),
@@ -20,7 +23,6 @@ $(function () {
         app.fetch();
       },
       error: function (data) {
-        // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
         console.error('chatterbox: Failed to send message');
       }
     });
@@ -38,46 +40,39 @@ $(function () {
         return data.results;
       },
       error: function (data) {
-        // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-        console.error('chatterbox: we suck!');
+        console.error('chatterbox: failure');
       }
     });
   };
 
-  app.server = 'https://api.parse.com/1/classes/chatterbox';
 
   app.getMessages = function(messages) {
-    console.log(messages);
     app.clearMessages();
-    for(var i = 0; i < 10; i++) {
-      if(messages[i].text === undefined || messages[i].text.length >= 0) {
-        //messages[i].text = 'Im a loser who doesnt know how to type';
-      }
-      if (messages[i][0] !== '<' || messages[i].split('function()').length <= 1 || messages[i].split('<script>').length <= 1 || messages[i].split('()').length <= 1 || messages[i].split('prompt()').length <= 1) {
-        $('#chats').append('<p>' + messages[i].username + ': ' + messages[i].text + ' ' +
-          messages[i].createdAt + '</p>').addClass('.message');
-      } else {
-        console.log(messages[i].text);
-      }
+
+    for(var i = 0; i < 15; i++) {
+
+      var usernameNode = $('<span class=username></span>');
+      var textNode = $('<span class=text></span>');
+      var dateNode = $('<span class=date></span>');
+      var messageNode = $('<div class=message></div>');
+
+      usernameNode.text(messages[i].username + ': ');
+      textNode.text(messages[i].text + '');
+      dateNode.text(messages[i].createdAt + ' ');
+      messageNode.append(usernameNode,textNode,dateNode);
+      $('#chats').append(messageNode);
     }
   };
 
   app.clearMessages = function() {
     $('#chats').empty();
-  };
+  };  
 
   app.addMessage = function(message) {
     console.log(message);
     $('#chats').append('<p>' + message.username + ': ' + message.text + ' ' +
       message.createdAt +'</p>').addClass('.message');
   };
-
-
-  app.fetch();
-
-  setInterval(function(){
-    app.fetch();
-  }, 3000);
 
   app.addRoom = function(roomName){
     var newOption = ('<option>').text(roomName);
@@ -88,8 +83,6 @@ $(function () {
     var roomName = alert($(this).val());
     app.addRoom(roomName);
   });
-
-
 
   var username = (document.URL).split('=')[1];
   console.log(username);
@@ -103,4 +96,6 @@ $(function () {
     app.send(userObject);
     $('#userInput').val('');
   });
+  app.init();
 });
+
