@@ -1,5 +1,5 @@
 $(function () {
-
+  var currentRoom = 'Lobby';
   var app = {};
   app.server = 'https://api.parse.com/1/classes/chatterbox';
 
@@ -17,7 +17,7 @@ $(function () {
       data: JSON.stringify(message),
       contentType: 'application/json',
       success: function (data) {
-        console.log('chatterbox: Message sent');
+        // console.log('chatterbox: Message sent');
         _.extend(message, data);
         app.addMessage(message);
         app.fetch();
@@ -35,7 +35,7 @@ $(function () {
       type: 'GET',
       data: {order:'-createdAt'},
       success: function (data) {
-        console.log('chatterbox: successful');
+        // console.log('chatterbox: successful');
         app.getMessages(data.results);
         return data.results;
       },
@@ -50,17 +50,19 @@ $(function () {
     app.clearMessages();
 
     for(var i = 0; i < 15; i++) {
+      if(messages[i].roomname !== currentRoom) {
+        console.log(currentRoom);
+        var usernameNode = $('<span class=username></span>');
+        var textNode = $('<span class=text></span>');
+        var dateNode = $('<span class=date></span>');
+        var messageNode = $('<div class=message></div>');
 
-      var usernameNode = $('<span class=username></span>');
-      var textNode = $('<span class=text></span>');
-      var dateNode = $('<span class=date></span>');
-      var messageNode = $('<div class=message></div>');
-
-      usernameNode.text(messages[i].username + ': ');
-      textNode.text(messages[i].text + '');
-      dateNode.text(messages[i].createdAt + ' ');
-      messageNode.append(usernameNode,textNode,dateNode);
-      $('#chats').append(messageNode);
+        usernameNode.text(messages[i].username + ': ');
+        textNode.text(messages[i].text + '');
+        dateNode.text(messages[i].createdAt + ' ');
+        messageNode.append(usernameNode,textNode,dateNode);
+        $('#chats').append(messageNode);
+      }
     }
   };
 
@@ -69,7 +71,7 @@ $(function () {
   };
 
   app.addMessage = function(message) {
-    console.log(message);
+    // console.log(message);
     var usernameNode = $('<span class=username></span>');
     var textNode = $('<span class=text></span>');
     var dateNode = $('<span class=date></span>');
@@ -83,11 +85,18 @@ $(function () {
   };
 
   app.addRoom = function(roomName){
+    currentRoom = roomName;
     var optionNode = $('<option>').addClass(roomName)
                                   .text(roomName)
                                   .attr('selected', 'selected');
     $('select').append(optionNode);
   };
+
+  $('select').on('change', function() {
+    // console.log($(this).val());
+    var room = $(this).val();
+    console.log($('.' + room));
+  });
 
   $('#button').on('click', function(){
     var roomName = prompt($(this).val());
@@ -98,15 +107,22 @@ $(function () {
   var username = (document.URL).split('=')[1];
 
   $('#userSubmit').on('click', function() {
+
     var userInput = $('#userInput').val();
+    $('#userInput').val('');
     var userObject = {
       username: username,
       text: userInput,
     };
-
     app.send(userObject);
-    $('#userInput').val('');
   });
+
+
+
+
+
+
+
   app.init();
 });
 
