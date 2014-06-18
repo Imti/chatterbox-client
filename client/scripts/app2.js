@@ -1,10 +1,4 @@
-  var addFriend= function(){
-    console.log('hey im here');
-    var $newFriend = $(this).val();
-    alert($newFriend);
-    var friendNode = $('<p>'+$newFriend+'</p>');
-    $('#friends').append(friendNode);
-  };
+
 
 
 // App object functions/methods
@@ -76,7 +70,7 @@ var filter = function(roomName) {
 
 var renderMessage = function(message){
   console.log(message);
-  var usernameNode = $('<div class=username onClick='+ function(){return addFriend;} +'></div>');
+  var usernameNode = $('<div class=username></div>');
   var textNode = $('<span class=text></span>');
   var dateNode = $('<span class=date></span>');
   var messageNode = $('<div class=message></div>');
@@ -87,8 +81,6 @@ var renderMessage = function(message){
   messageNode.append(usernameNode,textNode,dateNode);
   $('#chats').prepend(messageNode);
 };
-
-
 
 app.refresh = function() {
   app.fetch(filter());
@@ -112,6 +104,15 @@ $(function() {
     var roomName = prompt($(this).val());
     roomName.split(' ').join('');
     app.addRoom(roomName);
+  });
+
+  $('#chats').on('click', '.username', function() {
+    var friend = $(this).text();
+    friend = friend.slice(0, friend.length - 2);
+    console.log(friend);
+
+    var friendNode = $('<p>'+friend+'</p>');
+    $('#friends').append(friendNode);
   });
 
 
