@@ -68,6 +68,7 @@ form input[type=text] {
 
 .username {
     color: teal;
+    cursor: pointer;
 }
 
 .text {

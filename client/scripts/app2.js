@@ -1,3 +1,12 @@
+  var addFriend= function(){
+    console.log('hey im here');
+    var $newFriend = $(this).val();
+    alert($newFriend);
+    var friendNode = $('<p>'+$newFriend+'</p>');
+    $('#friends').append(friendNode);
+  };
+
+
 // App object functions/methods
 var app = {};
 
@@ -24,11 +33,6 @@ app.fetch = function(callback) {
 
 
 
-// need to add:
-
-
-
-
 app.addRoom = function(roomName){
   var optionNode = $('<option>')
     .addClass(roomName)
@@ -37,30 +41,42 @@ app.addRoom = function(roomName){
   $('select').append(optionNode);
 };
 
+app.clearMessages = function() {
+    $('#chats').empty();
+  };
 
+app.roomStorage = {};
+app.friends = {};
 
 // helper functions
 var filter = function(roomName) {
-
+  var count = 0;
   var filterMessages = function(messages) {
     _.each(messages, function(message) {
-      if (message.roomname === undefined) {
+      if (roomName === 'Lobby') {
         renderMessage(message);
+
+        console.log('im undefined' + count);
+        count++;
       } else if(message.roomname === roomName) {
         console.log('got in dafilter');
         renderMessage(message);
-      } else {
-        console.log('got through da filter');
+      }
+      if (message.roomname !== undefined || message.roomname !== null) {
+        if (app.roomStorage[message.roomname] === undefined) {
+          app.roomStorage[message.roomname] = true;
+          app.addRoom(message.roomname);
+        }
       }
     });
-}
+  };
   return filterMessages;
 
 };
 
 var renderMessage = function(message){
   console.log(message);
-  var usernameNode = $('<span class=username></span>');
+  var usernameNode = $('<div class=username onClick='+ function(){return addFriend;} +'></div>');
   var textNode = $('<span class=text></span>');
   var dateNode = $('<span class=date></span>');
   var messageNode = $('<div class=message></div>');
@@ -73,13 +89,23 @@ var renderMessage = function(message){
 };
 
 
+
+app.refresh = function() {
+  app.fetch(filter());
+  setInterval(function() {
+    filter();
+  }, 3000);
+};
+app.fetch(filter());
+app.refresh();
 // event handlers
 $(function() {
 
   $('select').change(function(){
+    app.clearMessages();
     var roomName = $(this).val();
-    app.fetch(filter(roomName));
 
+    app.fetch(filter(roomName));
   });
 
   $('#button').on('click', function(){
@@ -87,7 +113,6 @@ $(function() {
     roomName.split(' ').join('');
     app.addRoom(roomName);
   });
-
 
 
 });
